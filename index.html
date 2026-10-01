@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yangi kelgan mahsulotlar</title>
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--mut:#6b7280;--card:#f3f4f6;--acc:#2563eb;--line:#e5e7eb}
+@media(prefers-color-scheme:dark){:root{--bg:#111827;--fg:#f3f4f6;--mut:#9ca3af;--card:#1f2937;--acc:#60a5fa;--line:#374151}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:16px}
+.w{max-width:640px;margin:0 auto;padding:0 12px 24px}
+.top{position:sticky;top:0;background:var(--bg);padding:10px 0 8px;z-index:5;border-bottom:1px solid var(--line)}
+h1{font-size:18px;margin:0 0 8px}
+input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:16px;background:var(--card);color:var(--fg);outline:none}
+.row{display:flex;gap:8px;margin-top:8px}
+.btn{flex:1;min-height:44px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:12px;font-size:14px;cursor:pointer;padding:0 8px}
+.btn.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.bw{display:none;margin-top:8px;max-height:50vh;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.bw.open{display:block}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td,th{padding:12px;border-bottom:1px solid var(--line);text-align:left}
+th{background:var(--card);position:sticky;top:0}
+td:last-child,th:last-child{text-align:right;width:70px}
+tr.b.sel td{background:var(--acc);color:#fff}
+.cnt{color:var(--mut);font-size:13px;margin:10px 2px 2px}
+.it{display:flex;justify-content:space-between;gap:12px;padding:13px 2px;border-bottom:1px solid var(--line);font-size:15px;line-height:1.3}
+.it span:last-child{white-space:nowrap;font-weight:600}
+.no{text-align:center;color:var(--mut);padding:30px}
+</style></head><body><div class="w">
+<div class="top">
+<h1>🆕 Yangi kelgan mahsulotlar</h1>
+<input id="q" type="search" placeholder="Qidirish..." autocomplete="off">
+<div class="row">
+<button class="btn" id="bb">Brend ▾</button>
+<button class="btn on" data-s="pa">Narx ↑</button>
+<button class="btn" data-s="pd">Narx ↓</button>
+<button class="btn" data-s="az">A-Z</button>
+</div>
+<div class="bw" id="bw"><table><thead><tr><th>Brend</th><th>Soni</th></tr></thead><tbody id="brands"></tbody></table></div>
+</div>
+<div class="cnt" id="cnt"></div>
+<div id="list"></div>
+</div>
+<script>
+const DATA=[{"b": "Olimp", "n": "OLIMP CHELA ZINC 15MG 30CAPS", "p": 80000}, {"b": "Olimp", "n": "OLIMP Hepa Plus 30caps", "p": 80000}, {"b": "FuelUp", "n": "FUEL UP CHROMIUM PICOLINATE 200 100tabs", "p": 90000}, {"b": "FuelUp", "n": "FUELUP MELATONIN 3MG 60CAP", "p": 90000}, {"b": "Reckful", "n": "Reckful Creatine 150caps", "p": 90000}, {"b": "FuelUp", "n": "FUELUP SELENIUM 100MCG 100TAB", "p": 100000}, {"b": "FuelUp", "n": "FUELUP VITAMIN C 500MCG 90CAP", "p": 100000}, {"b": "Nutricost", "n": "NUTRICOST YOHIMBINE 5MG 30CAPS", "p": 100000}, {"b": "Olimp", "n": "OLIMP Kelp 60tabs", "p": 100000}, {"b": "Olimp", "n": "OLIMP VITA MIN ONE 60CAPS", "p": 100000}, {"b": "Olimp", "n": "Olimp CHela Mag B6 Ashwagandha+zen szen 30caps", "p": 100000}, {"b": "Olimp", "n": "Olimp Caffeine Kick 60caps", "p": 100000}, {"b": "Olimp", "n": "Olimp Testomag 30 tabs", "p": 110000}, {"b": "FA Skull Labs", "n": "FA Skull Labs Creatine 300gr", "p": 120000}, {"b": "FuelUp", "n": "FUELUP BIOTIN 5.000MCG 60CAP", "p": 120000}, {"b": "FuelUp", "n": "FUELUP MAG CITRATE 100MG 60CAPS", "p": 120000}, {"b": "FuelUp", "n": "FUELUP MELATONIN 5mg 60 tabs", "p": 120000}, {"b": "FuelUp", "n": "FUELUP VITAMIN D3+K2 1000UI 120Soft", "p": 120000}, {"b": "KL (Kevin Levrone)", "n": "KL GOLD CREATINE 300G 60 SERV", "p": 120000}, {"b": "Olimp", "n": "OLIMP Forsen+Melatonina gummies", "p": 120000}, {"b": "Olimp", "n": "Olimp CHela Mag B6 + D3", "p": 120000}, {"b": "KL (Kevin Levrone)", "n": "KL Anabolic Ice EAA 210gr Blackberry Pineapple", "p": 140000}, {"b": "KL (Kevin Levrone)", "n": "KL Anabolic Ice EAA 210gr Dragon Fruit", "p": 140000}, {"b": "KL (Kevin Levrone)", "n": "KL Anabolic Ice EAA 210gr Mango Passion Fruit", "p": 140000}, {"b": "KL (Kevin Levrone)", "n": "KL Anabolic Ice EAA 210gr Orange Mango", "p": 140000}, {"b": "FuelUp", "n": "FUELUP Ashwagandha 300mg 60caps", "p": 150000}, {"b": "FuelUp", "n": "FUELUP CHELATED IRON 36MG 90CAPS", "p": 150000}, {"b": "FuelUp", "n": "FUELUP MELATONIN 10MG 60CAP", "p": 150000}, {"b": "FuelUp", "n": "FUELUP VITAMIN D3+K2 4000 60CAPS", "p": 150000}, {"b": "Olimp", "n": "OLIMP Glucosamine Plus 60caps", "p": 150000}, {"b": "Olimp", "n": "Olimp Gold Omega 3 Kids Gummies Tropic", "p": 150000}, {"b": "Reckful", "n": "Reckful BCAA Electrolytes 2:1:1 260gr Mojito", "p": 150000}, {"b": "Reckful", "n": "Reckful L Glutamin 120caps", "p": 150000}, {"b": "Reckful", "n": "Reckful L Glutamin 240gr", "p": 150000}, {"b": "Reckful", "n": "Reckful Shred Fat Burner 30caps", "p": 150000}, {"b": "Cellucor", "n": "CELLUCOR CREATINE 300G", "p": 160000}, {"b": "FuelUp", "n": "FUELUP INOSITOL 500MG 90CAPS", "p": 160000}, {"b": "FuelUp", "n": "FUELUP CALCIUM BISGLYCINATE 125MG 120CAPS", "p": 170000}, {"b": "Olimp", "n": "OLIMP Ashwagandha 600 sport 60caps", "p": 170000}, {"b": "Erekton", "n": "Erekton Ultra 30caps", "p": 180000}, {"b": "FuelUp", "n": "FUELUP LIPOSOMAL B COMPLEX 60CAPS", "p": 180000}, {"b": "FuelUp", "n": "FUELUP VITAMIN C 1000MG 90CAPS", "p": 180000}, {"b": "Olimp", "n": "OLIMP Arthroblock Forte 60caps", "p": 180000}, {"b": "Olimp", "n": "OLIMP VITA MIN MULTI MEGA 60CAPS", "p": 180000}, {"b": "Reckful", "n": "Reckful AAKG 240gr", "p": 190000}, {"b": "Reckful", "n": "Reckful Shred Black Fat Burner 60caps", "p": 190000}, {"b": "FuelUp", "n": "FUELUP COENZYME Q10 100MG 100CAPS", "p": 200000}, {"b": "Boshqa", "n": "LIPOSOMAL D3+K2 5000 60CAPS", "p": 200000}, {"b": "Olimp", "n": "Olimp Gold Omega 3 D3 K2 60caps", "p": 200000}, {"b": "Reckful", "n": "Reckful L Carnitine 3000 500ml Apple", "p": 200000}, {"b": "Reckful", "n": "Reckful L Carnitine 3000 500ml Watermelon", "p": 200000}, {"b": "Reckful", "n": "Reckful The Pump 240gr Bluberry Apple", "p": 200000}, {"b": "Gear", "n": "GEAR Pre Pump SHock 350gr Mango Lemon", "p": 210000}, {"b": "FuelUp", "n": "FUELUP MAGNESIUM GLYCINATE 100MG", "p": 220000}, {"b": "FuelUp", "n": "FUELUP MAGNESIUM GLYCINATE 200MG 90TAB", "p": 220000}, {"b": "Olimp", "n": "OLIMP L Carnitin 500", "p": 220000}, {"b": "SixStar", "n": "SIXSTAR TESTOSTERON BOOSTER 60CAPS", "p": 220000}, {"b": "KL (Kevin Levrone)", "n": "KL SHAABOOM 385gr FRUIT PUNCH", "p": 240000}, {"b": "KL (Kevin Levrone)", "n": "KL SHAABOOM MANGO LEMON 44SER", "p": 240000}, {"b": "KL (Kevin Levrone)", "n": "KL SHAABOOM PUMP CITRUS PEACH 44SER", "p": 240000}, {"b": "KL (Kevin Levrone)", "n": "KL SHAABOOM PUMP DRAGON FRUIT 385G", "p": 240000}, {"b": "KL (Kevin Levrone)", "n": "KL SHAABOOM PUMP EXOTIC 385G", "p": 240000}, {"b": "FuelUp", "n": "FUELUP MYO D CHIRO INOSITOL 120CAPS", "p": 250000}, {"b": "Olimp", "n": "Olimp Iso Plus 700gr Lemon", "p": 250000}, {"b": "Xtend", "n": "XTEND EAA BLOOD ORANGE 40S", "p": 250000}, {"b": "Xtend", "n": "XTEND EAA LEMON LIME 40S", "p": 250000}, {"b": "Olimp", "n": "Olimp CHela Mag B6", "p": 270000}, {"b": "FuelUp", "n": "FUELUP ULTRA OMEGA 750MG 90SOFT", "p": 280000}, {"b": "Reckful", "n": "Reckful Monster Pak 300gr Cherry", "p": 290000}, {"b": "Reckful", "n": "Reckful Monster Pak 300gr Fruit Punch", "p": 290000}, {"b": "Reckful", "n": "Reckful Monster Pak 300gr Orange", "p": 290000}, {"b": "Reckful", "n": "Reckful Whey Pro Polydextrose 450gr Chocolate", "p": 290000}, {"b": "Reckful", "n": "Reckful Whey Pro Polydextrose 450gr Cinnabon", "p": 290000}, {"b": "Reckful", "n": "Reckful Whey Pro Polydextrose 450gr Pistacho", "p": 290000}, {"b": "Reckful", "n": "Reckful Whey Pro Polydextrose 450gr Salt Caramel", "p": 290000}, {"b": "Allmax", "n": "ALLMAX CREATIN", "p": 300000}, {"b": "Quamtrax", "n": "QUAMTRAX l carnitine 3000 Cola", "p": 310000}, {"b": "Olimp", "n": "OLIMP ZMA 90caps", "p": 320000}, {"b": "Olimp", "n": "Olimp Gold Omega 3 200caps", "p": 330000}, {"b": "Allmax", "n": "ALLMAX L ARGININE 400G", "p": 350000}, {"b": "MuscleTech", "n": "Muscle tech cell tech", "p": 350000}, {"b": "KL (Kevin Levrone)", "n": "KL GOLD WHEY 908gr Chocolate", "p": 390000}, {"b": "MuscleTech", "n": "MT CELL TECH 1.36KG TROPIC", "p": 390000}, {"b": "Mutant", "n": "MUTANT MASS 2.3KG Strawberry Banan", "p": 390000}, {"b": "Reckful", "n": "Reckful Whey Beef 900gr Blueberry", "p": 390000}, {"b": "Reckful", "n": "Reckful Whey Beef 900gr Chocolate", "p": 390000}, {"b": "Reckful", "n": "Reckful Whey Beef 900gr Salted Caramel", "p": 390000}, {"b": "Con-Cret", "n": "CON-CRET limon lime", "p": 410000}, {"b": "Allmax", "n": "ALLMAX Mass Gainer 2.27kg Chocolate", "p": 550000}, {"b": "RAW (CBUM)", "n": "RAW CBUM ISOLATE 2,3kg Vanilla Oatmeal Cookie", "p": 1400000}];
+let brand="",sort="pa";
+const $=id=>document.getElementById(id);
+const fmt=n=>n.toLocaleString("en-US").replace(/,/g," ");
+function brandsUI(){
+  const c={};DATA.forEach(r=>c[r.b]=(c[r.b]||0)+1);
+  const list=Object.entries(c).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+  $("brands").innerHTML=`<tr class="b ${brand?"":"sel"}" data-b=""><td>Hammasi</td><td>${DATA.length}</td></tr>`+
+    list.map(([b,n])=>`<tr class="b ${brand===b?"sel":""}" data-b="${b}"><td>${b}</td><td>${n}</td></tr>`).join("");
+  document.querySelectorAll("tr.b").forEach(el=>el.onclick=()=>{brand=el.dataset.b;$("bw").classList.remove("open");$("bb").textContent=(brand||"Brend")+" ▾";$("bb").classList.toggle("on",!!brand);brandsUI();render()});
+}
+function render(){
+  const q=$("q").value.trim().toLowerCase();
+  const res=DATA.filter(r=>(!brand||r.b===brand)&&(!q||r.n.toLowerCase().includes(q)));
+  res.sort((a,b)=>sort==="pa"?a.p-b.p||a.n.localeCompare(b.n):sort==="pd"?b.p-a.p||a.n.localeCompare(b.n):a.n.localeCompare(b.n));
+  $("cnt").textContent=res.length+" ta mahsulot";
+  $("list").innerHTML=res.length?res.map(r=>`<div class="it"><span>${r.n}</span><span>${fmt(r.p)}</span></div>`).join(""):'<div class="no">Hech narsa topilmadi</div>';
+}
+$("q").addEventListener("input",render);
+$("bb").onclick=()=>$("bw").classList.toggle("open");
+document.querySelectorAll("[data-s]").forEach(el=>el.onclick=()=>{sort=el.dataset.s;document.querySelectorAll("[data-s]").forEach(x=>x.classList.toggle("on",x===el));render()});
+brandsUI();render();
+</script></body></html>
